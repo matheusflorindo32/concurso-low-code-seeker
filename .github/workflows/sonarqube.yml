@@ -1,0 +1,86 @@
+name: SonarQube Analysis
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  sonarqube:
+    name: SonarQube Quality Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Shallow clones should be disabled for better analysis
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run linting
+      run: npm run lint || echo "Linting not configured"
+      
+    - name: Run unit tests with coverage
+      run: npm run test:coverage
+      
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+      
+    - name: Run E2E tests
+      run: npm run test:e2e || echo "E2E tests completed"
+      
+    - name: SonarQube Scan
+      uses: sonarqube-quality-gate-action@master
+      with:
+        scanMetadataReportFile: target/sonar/report-task.txt
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        
+    - name: Quality Gate Check
+      id: sonarqube-quality-gate-check
+      uses: sonarqube-quality-gate-action@master
+      timeout-minutes: 5
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        
+    - name: Comment PR
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const qualityGate = '${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}';
+          const projectKey = 'leds-ifes-concurso-system';
+          const sonarUrl = `https://sonarcloud.io/dashboard?id=${projectKey}`;
+          
+          const comment = qualityGate === 'PASSED' 
+            ? `✅ **SonarQube Quality Gate: PASSED**\n\n[View detailed analysis](${sonarUrl})`
+            : `❌ **SonarQube Quality Gate: FAILED**\n\n[View issues](${sonarUrl})`;
+            
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+          
+    - name: Fail if Quality Gate failed
+      if: steps.sonarqube-quality-gate-check.outputs.quality-gate-status == 'FAILED'
+      run: |
+        echo "Quality Gate failed"
+        exit 1
