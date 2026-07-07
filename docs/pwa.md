@@ -1,120 +1,58 @@
-# Progressive Web App (PWA)
+# PWA e recursos offline
 
-## 📱 Funcionalidades PWA
+Este projeto possui uma estrutura inicial para recursos de Progressive Web App, incluindo `manifest.json` e um arquivo de service worker em `public/sw.js`.
 
-Este projeto implementa uma **Progressive Web App** completa com todas as funcionalidades modernas para uma experiência nativa.
+No estado atual, a aplicação prioriza a entrega funcional do desafio: consulta de concursos por CPF e consulta de candidatos por código do concurso.
 
-## ⭐ Características Implementadas
+---
 
-### 🔧 Core PWA
-- **Web App Manifest**: Configuração completa para instalação
-- **Service Worker**: Cache offline e estratégias de rede
-- **App Icons**: Ícones otimizados (192x192 e 512x512)
-- **Theme Colors**: Cores personalizadas para status bar
+## Recursos presentes
 
-### 📲 Instalação
-- **Install Prompt**: Prompt personalizado para instalação
-- **Auto-detection**: Detecta quando a app pode ser instalada
-- **Cross-platform**: Funciona em Android, iOS e Desktop
+### Manifest
 
-### 🔄 Atualizações
-- **Update Notifications**: Notifica quando há atualizações
-- **Background Sync**: Preparado para sincronização offline
-- **Cache Strategy**: Cache-first com fallback para rede
+O arquivo `public/manifest.json` define informações básicas da aplicação, como:
 
-### 🌐 Offline Support
-- **Offline Indicator**: Mostra status da conexão
-- **Cached Pages**: Páginas principais funcionam offline
-- **Graceful Degradation**: Funcionalidades limitadas offline
+- nome da aplicação;
+- nome curto;
+- cores de tema;
+- modo de exibição;
+- ícones;
+- atalhos para os principais fluxos.
 
-## 🚀 Como Usar
+### Service worker
 
-### Instalação no Dispositivo
-1. Abra a aplicação no navegador
-2. Aparecerá um prompt para instalar
-3. Clique em "Instalar" para adicionar à tela inicial
-4. A app funciona como um aplicativo nativo
+O arquivo `public/sw.js` contém uma base de service worker com estratégia de cache para páginas e recursos estáticos.
 
-### Recursos Offline
-- Navegação entre páginas
-- Visualização de dados em cache
-- Interface totalmente funcional
-- Formulários salvos para sincronização posterior
+---
 
-## 🛠️ Arquitetura Técnica
+## Estado atual
 
-### Service Worker (`/public/sw.js`)
-```javascript
-// Estratégias de cache implementadas:
-- Cache-first para recursos estáticos
-- Network-first para dados dinâmicos
-- Fallback offline para navegação
-```
+Os recursos de PWA existem como estrutura técnica inicial, mas não devem ser tratados como funcionalidade principal da entrega.
 
-### Manifest (`/public/manifest.json`)
-```json
-{
-  "name": "Sistema de Consulta de Concursos LEDS IFES",
-  "short_name": "Concursos LEDS",
-  "start_url": "/",
-  "display": "standalone"
-}
-```
+Para uma validação completa de PWA, ainda seria necessário:
 
-### Hook Personalizado (`usePWA`)
-- **Instalação**: Gerencia prompt de instalação
-- **Atualizações**: Detecta e aplica atualizações
-- **Status**: Monitora conexão e estado da app
+- registrar o service worker em produção;
+- testar o comportamento offline em navegador real;
+- validar instalação em desktop e mobile;
+- revisar cache de rotas e assets;
+- executar auditoria em Lighthouse;
+- confirmar se os ícones referenciados existem e carregam corretamente.
 
-## 📊 Componentes PWA
+---
 
-### `PWAInstallPrompt`
-- Prompt personalizado de instalação
-- Design integrado ao tema da aplicação
-- Controle de visibilidade automático
+## Decisão de escopo
 
-### `PWAUpdateNotification`
-- Notificação de atualizações disponíveis
-- Aplicação seamless de atualizações
-- Feedback visual para o usuário
+Como o desafio principal está relacionado à compatibilidade entre candidatos, profissões e concursos, a camada PWA foi mantida como melhoria futura, sem ser apresentada como requisito central da solução.
 
-### `OfflineIndicator`
-- Indicador visual de status offline/online
-- Transições suaves entre estados
-- Informações sobre funcionalidades limitadas
+Essa decisão evita prometer uma funcionalidade que ainda depende de validação específica em ambiente real.
 
-## 🔍 Métricas e Performance
+---
 
-### Lighthouse PWA Score
-- **Installable**: ✅ Instalável
-- **PWA Optimized**: ✅ Otimizada para PWA
-- **Service Worker**: ✅ Registrado e funcional
-- **Manifest**: ✅ Válido e completo
+## Possíveis evoluções
 
-### Web Vitals Impact
-- **FCP**: Melhorado com cache de recursos
-- **LCP**: Otimizado com service worker
-- **FID**: Responsividade mantida offline
-- **CLS**: Estabilidade visual garantida
-
-## 🎯 Próximas Melhorias
-
-### Funcionalidades Futuras
-- **Push Notifications**: Notificações sobre novos concursos
-- **Background Sync**: Sincronização automática de dados
-- **Share API**: Compartilhamento nativo de concursos
-- **Clipboard API**: Cópia rápida de informações
-
-### Otimizações Planejadas
-- **Precaching**: Cache inteligente de dados críticos
-- **Delta Updates**: Atualizações incrementais
-- **Performance Budget**: Controle de tamanho de cache
-- **Analytics**: Métricas de uso offline
-
-## 📚 Recursos Utilizados
-
-- **Workbox**: Biblioteca para service workers
-- **Web App Manifest**: Especificação W3C
-- **Cache API**: API nativa de cache do navegador
-- **Service Worker API**: API de service workers
-- **Install Events**: Eventos de instalação PWA
+- ativar registro do service worker somente após validação;
+- adicionar tela/aviso de modo offline;
+- criar estratégia de cache mais simples e previsível;
+- validar instalação em Android, iOS e desktop;
+- revisar ícones, tema e shortcuts;
+- criar testes manuais documentados para PWA.
