@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cleanCPF, formatCPF, isValidCPF } from './cpfValidator';
+import { cleanCPF, formatCPF, isValidCPF, maskCPF } from './cpfValidator';
 
 describe('cpfValidator', () => {
   it('remove caracteres não numéricos do CPF', () => {
@@ -20,5 +20,13 @@ describe('cpfValidator', () => {
 
   it('rejeita CPF com todos os dígitos iguais', () => {
     expect(isValidCPF('11111111111')).toBe(false);
+  });
+
+  it('aplica máscara progressiva com traço antes dos dois últimos dígitos', () => {
+    expect(maskCPF('12345678901')).toBe('123.456.789-01');
+  });
+
+  it('limita a máscara aos onze primeiros números', () => {
+    expect(maskCPF('12345678901999')).toBe('123.456.789-01');
   });
 });
