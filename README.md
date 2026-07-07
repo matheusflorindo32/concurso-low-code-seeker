@@ -13,7 +13,7 @@ A solução permite realizar duas operações principais:
 
 ## Visão geral
 
-O sistema foi construído como uma aplicação web em **React + TypeScript**, com interface responsiva e separação entre páginas, componentes, hooks, utilitários, tipos e dados simulados.
+O sistema foi construído como uma aplicação web em **React + TypeScript**, com interface responsiva e separação entre páginas, componentes, serviços, hooks, utilitários, tipos e dados simulados.
 
 A regra principal do projeto é simples: comparar a lista de profissões do candidato com a lista de vagas do concurso. Quando existe ao menos uma profissão em comum, o sistema considera que há compatibilidade.
 
@@ -98,8 +98,9 @@ Os dados seguem o enunciado do desafio e estão organizados no projeto como dado
 src/
 ├── components/       # Componentes reutilizáveis da interface
 ├── data/             # Dados simulados do desafio
-├── hooks/            # Hooks com lógica de busca
+├── hooks/            # Hooks para estado e integração com a UI
 ├── pages/            # Páginas principais da aplicação
+├── services/         # Regras de negócio e consultas do desafio
 ├── types/            # Tipos TypeScript
 └── utils/            # Funções utilitárias, validação e comparação
 ```
@@ -111,7 +112,8 @@ src/
 | `src/pages/Index.tsx` | Tela inicial com acesso às duas buscas |
 | `src/pages/BuscarConcursos.tsx` | Página de busca de concursos por CPF |
 | `src/pages/BuscarCandidatos.tsx` | Página de busca de candidatos por código |
-| `src/hooks/useSearch.ts` | Lógica principal de consulta |
+| `src/services/searchService.ts` | Regras de negócio para consulta de concursos e candidatos |
+| `src/hooks/useSearch.ts` | Controle de loading, erro e integração entre service e interface |
 | `src/data/mockData.ts` | Dados de candidatos e concursos |
 | `src/utils/cpfValidator.ts` | Limpeza, máscara e validação de CPF |
 | `src/utils/listIntersection.ts` | Comparação entre profissões e vagas |
@@ -123,6 +125,14 @@ src/
 ### Separação de responsabilidades
 
 A aplicação foi organizada para separar interface, regras de busca, dados e funções auxiliares. Isso facilita leitura, manutenção e evolução do projeto.
+
+### Camada de serviço
+
+As regras principais de compatibilidade foram concentradas em `src/services/searchService.ts`. Dessa forma, a lógica do desafio pode ser testada de forma isolada, sem depender diretamente da camada visual em React.
+
+### Hook de busca
+
+O hook `useSearch` ficou responsável pelos estados de interface, como carregamento, mensagem de erro e chamada das funções de serviço. Isso reduz acoplamento e deixa o fluxo mais fácil de manter.
 
 ### Validação de CPF
 
