@@ -4,7 +4,19 @@ import { searchCandidatosByCodigo, searchConcursosByCPF } from '@/services/searc
 
 const SEARCH_DELAY_MS = 500;
 
+const ERROR_MESSAGES = [
+  'CPF inválido',
+  'Candidato não encontrado',
+  'Código do concurso é obrigatório',
+  'Concurso não encontrado',
+  'Erro interno do sistema',
+];
+
 const delay = () => new Promise((resolve) => setTimeout(resolve, SEARCH_DELAY_MS));
+
+const isErrorMessage = (message?: string) => {
+  return Boolean(message && ERROR_MESSAGES.includes(message));
+};
 
 /**
  * Hook personalizado para busca de candidatos e concursos.
@@ -22,8 +34,8 @@ export const useSearch = () => {
       await delay();
       const result = operation();
 
-      if (!result.found && result.message) {
-        setError(result.message);
+      if (isErrorMessage(result.message)) {
+        setError(result.message || null);
       }
 
       return result;
