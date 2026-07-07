@@ -1,117 +1,126 @@
 # Guia de Testes
 
-## 🧪 Estratégia de Testes
+Este documento descreve a estratégia de testes do projeto e os comandos disponíveis para validação local e em CI.
 
-Este projeto implementa uma estratégia abrangente de testes para garantir qualidade e confiabilidade:
+---
 
-### Tipos de Testes Implementados
+## Objetivo
 
-#### 1. **Testes Unitários** (53 testes)
-- **CPF Validator**: 21 testes
-  - Validação de CPFs específicos do desafio
-  - Formatação e limpeza de CPF
-  - Casos extremos e edge cases
+A estratégia de testes tem como foco validar as partes mais importantes da solução:
 
-- **List Intersection**: 15 testes
-  - Normalização de strings
-  - Comparação de arrays
-  - Casos com e sem intersecção
+- funções utilitárias de CPF;
+- comparação entre profissões e vagas;
+- carregamento das páginas principais;
+- navegação básica entre os fluxos do desafio.
 
-- **Search Hook**: 17 testes
-  - Busca por CPF
-  - Busca por código
-  - Estados de loading e erro
+A cobertura pode ser ampliada nas próximas evoluções do projeto, especialmente com testes mais completos para formulários, estados de erro e resultados de busca.
 
-#### 2. **Testes E2E** (15+ cenários)
-- **Navegação**: Fluxos entre páginas
-- **Busca por CPF**: Cenários de sucesso e erro
-- **Busca por Código**: Validações e resultados
-- **Responsividade**: Mobile, tablet e desktop
-- **Validações**: Campos obrigatórios e formatos
+---
 
-### Como Executar os Testes
+## Comandos disponíveis
 
-#### Testes Unitários
+### Testes unitários
+
 ```bash
-# Executar todos os testes unitários
 npm run test
+```
 
-# Executar testes com interface gráfica
-npm run test:ui
+Executa os testes unitários com Vitest.
 
-# Executar testes com cobertura
-npm run test:coverage
+### Testes unitários em modo observação
 
-# Executar testes em modo watch
+```bash
 npm run test:watch
 ```
 
-#### Testes E2E
+Mantém o Vitest ativo para reexecutar testes durante o desenvolvimento.
+
+### Cobertura de testes
+
 ```bash
-# Executar todos os testes E2E
+npm run test:coverage
+```
+
+Executa a verificação de cobertura quando o provedor de cobertura estiver disponível no ambiente.
+
+### Testes end-to-end
+
+```bash
 npm run test:e2e
+```
 
-# Executar em modo interativo
+Executa os testes E2E com Playwright.
+
+### Testes E2E com interface
+
+```bash
 npm run test:e2e:ui
+```
 
-# Executar em browser específico
-npm run test:e2e -- --project=chromium
+Abre a interface do Playwright para depuração visual dos testes.
 
-# Executar com debug
+### Testes E2E em modo debug
+
+```bash
 npm run test:e2e:debug
 ```
 
-## 📊 Cobertura de Testes
+Executa os testes com ferramentas de depuração do Playwright.
 
-O projeto mantém alta cobertura de testes nos módulos críticos:
+---
 
-- **Utils**: 100% de cobertura
-- **Hooks**: 95% de cobertura  
-- **Core functions**: 100% de cobertura
-- **E2E Coverage**: 90% dos fluxos principais
+## Testes unitários atuais
 
-### Relatórios
-- Relatórios de cobertura são gerados automaticamente
-- Relatórios E2E com screenshots e vídeos
-- Integração com Codecov para tracking
-- Badge de cobertura no README
+Os testes unitários iniciais cobrem:
 
-## 🧪 Testes Manuais
+### CPF
 
-### Cenários de Teste Funcionais
+- limpeza de CPF;
+- formatação de CPF;
+- aceitação dos CPFs fornecidos pelo desafio;
+- rejeição de CPF com tamanho inválido;
+- rejeição de CPF com dígitos repetidos;
+- máscara progressiva durante a digitação.
 
-#### Busca por CPF
-1. **CPF válido com concursos**: `182.845.084-34` → Deve retornar concurso SEJUS
-2. **CPF válido sem concursos**: Teste com CPF sem profissões compatíveis
-3. **CPF inválido**: `123.456.789-00` → Deve mostrar erro de validação
-4. **CPF inexistente**: CPF válido mas não cadastrado
+### Comparação de listas
 
-#### Busca por Código
-1. **Código válido**: `61828450843` → Deve retornar candidatos compatíveis
-2. **Código inexistente**: `99999999999` → Deve mostrar erro
-3. **Campo vazio**: Deve solicitar preenchimento
+- identificação de compatibilidade entre profissão e vaga;
+- retorno falso quando não há compatibilidade;
+- normalização de maiúsculas, espaços e acentos;
+- retorno das profissões compatíveis.
 
-### Testes de Interface
-- **Responsividade**: Testar em diferentes tamanhos de tela
-- **Navegação**: Verificar funcionamento dos links
-- **Formulários**: Validar comportamento e feedback
-- **Loading states**: Confirmar indicadores de carregamento
+---
 
-## 🔍 Debugging e Qualidade
+## Testes E2E atuais
 
-### Ferramentas Utilizadas
-- **Vitest**: Framework de testes unitários
-- **Testing Library**: Testes de componentes React
-- **Playwright**: Testes E2E multiplataforma
-- **JSDoc**: Documentação de código
-- **ESLint**: Análise estática de código
-- **TypeScript**: Tipagem forte
+Os testes E2E iniciais funcionam como smoke tests, verificando se os fluxos principais carregam corretamente:
 
-### Boas Práticas
-- Testes isolados e independentes
-- Nomenclatura descritiva
-- Arrange-Act-Assert pattern
-- Mocks e stubs quando necessário
-- Testes de regressão para bugs
-- Screenshots e vídeos em falhas E2E
-- Testes em múltiplos navegadores
+- página inicial;
+- página de busca de concursos por CPF;
+- página de busca de candidatos por código.
+
+---
+
+## Próximos testes recomendados
+
+Para fortalecer a avaliação técnica, os próximos testes devem cobrir:
+
+- busca por CPF válido com resultado;
+- busca por CPF inválido;
+- busca por CPF não cadastrado;
+- busca por código válido com resultado;
+- busca por código inexistente;
+- campo de código vazio;
+- mensagens de sucesso e erro;
+- responsividade básica em mobile;
+- comportamento dos botões de navegação.
+
+---
+
+## Ferramentas utilizadas
+
+- **Vitest** para testes unitários;
+- **Testing Library** para testes de componentes React;
+- **Playwright** para testes end-to-end;
+- **ESLint** para análise estática;
+- **TypeScript** para tipagem e segurança no desenvolvimento.
