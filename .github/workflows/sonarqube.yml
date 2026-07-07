@@ -10,6 +10,8 @@ jobs:
   sonarqube:
     name: SonarQube Quality Analysis
     runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -36,7 +38,12 @@ jobs:
         run: npm run test:coverage
 
       - name: SonarCloud Scan
+        if: env.SONAR_TOKEN != ''
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Skip SonarCloud when token is missing
+        if: env.SONAR_TOKEN == ''
+        run: echo "SONAR_TOKEN não configurado; etapa SonarCloud ignorada."
