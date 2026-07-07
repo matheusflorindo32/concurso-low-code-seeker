@@ -19,16 +19,13 @@ export const useSearch = () => {
     setError(null);
 
     try {
-      // Simula delay de API
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Valida CPF
       if (!isValidCPF(cpf)) {
         setError('CPF inválido');
         return { data: [], found: false, message: 'CPF inválido' };
       }
 
-      // Busca candidato pelo CPF
       const candidato = candidatos.find(c => cleanCPF(c.cpf) === cleanCPF(cpf));
       
       if (!candidato) {
@@ -36,7 +33,6 @@ export const useSearch = () => {
         return { data: [], found: false, message: 'Candidato não encontrado' };
       }
 
-      // Busca concursos compatíveis
       const concursosCompativeis = concursos.filter(concurso => 
         hasIntersection(candidato.profissoes, concurso.vagas)
       );
@@ -67,26 +63,26 @@ export const useSearch = () => {
     setError(null);
 
     try {
-      // Simula delay de API
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Valida se código foi fornecido
-      if (!codigo.trim()) {
+      const codigoNormalizado = codigo.trim();
+
+      if (!codigoNormalizado) {
         setError('Código do concurso é obrigatório');
         return { data: [], found: false, message: 'Código do concurso é obrigatório' };
       }
 
-      // Busca concurso pelo código
-      const concurso = concursos.find(c => c.codigo === codigo.trim());
+      const concursosEncontrados = concursos.filter(c => c.codigo === codigoNormalizado);
       
-      if (!concurso) {
+      if (concursosEncontrados.length === 0) {
         setError('Concurso não encontrado');
         return { data: [], found: false, message: 'Concurso não encontrado' };
       }
 
-      // Busca candidatos compatíveis
+      const vagasDoCodigo = concursosEncontrados.flatMap(concurso => concurso.vagas);
+
       const candidatosCompativeis = candidatos.filter(candidato => 
-        hasIntersection(candidato.profissoes, concurso.vagas)
+        hasIntersection(candidato.profissoes, vagasDoCodigo)
       );
 
       if (candidatosCompativeis.length === 0) {
