@@ -85,8 +85,10 @@ Os dados seguem o enunciado do desafio e estão organizados no projeto como dado
 - **React Router DOM** — navegação entre páginas;
 - **Tailwind CSS** — estilização responsiva;
 - **shadcn/ui** — componentes de interface;
+- **Vitest** — testes unitários;
+- **Playwright** — testes end-to-end;
 - **Docker** — estrutura para execução em container;
-- **GitHub Actions** — arquivos de automação para validação e integração contínua.
+- **GitHub Actions** — automação para validação e build.
 
 ---
 
@@ -173,6 +175,28 @@ npm run preview
 
 ---
 
+## Testes
+
+### Testes unitários
+
+```bash
+npm run test
+```
+
+### Testes end-to-end
+
+```bash
+npm run test:e2e
+```
+
+### Testes em modo observação
+
+```bash
+npm run test:watch
+```
+
+---
+
 ## Execução com Docker
 
 O projeto possui um `Dockerfile` para build e execução da aplicação em ambiente containerizado.
@@ -225,12 +249,11 @@ O repositório também possui documentos auxiliares em `docs/`, incluindo:
 
 Alguns caminhos naturais para evolução do projeto são:
 
-- consolidar scripts de testes no `package.json`;
-- revisar a configuração de CI/CD conforme a branch principal do repositório;
+- ampliar os testes automatizados dos fluxos de busca e mensagens de erro;
 - ativar e validar completamente os recursos de PWA;
-- adicionar testes automatizados cobrindo os fluxos principais;
 - substituir dados simulados por uma fonte externa ou banco de dados;
-- publicar uma versão online demonstrável.
+- publicar uma versão online demonstrável;
+- evoluir a interface com estados visuais mais detalhados para sucesso, erro e ausência de resultados.
 
 ---
 
